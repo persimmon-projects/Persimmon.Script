@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1290C1D5-2F2
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Persimmon.Script", "src\Persimmon.Script\Persimmon.Script.fsproj", "{C5541FAC-3052-49DC-8239-711807034072}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D4A6AE7D-D0E3-41AA-AC37-3BC0B773B734}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Persimmon.Script.Tests", "tests\Persimmon.Script.Tests\Persimmon.Script.Tests.fsproj", "{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +36,21 @@ Global
 		{C5541FAC-3052-49DC-8239-711807034072}.Release|x64.Build.0 = Release|x64
 		{C5541FAC-3052-49DC-8239-711807034072}.Release|x86.ActiveCfg = Release|x86
 		{C5541FAC-3052-49DC-8239-711807034072}.Release|x86.Build.0 = Release|x86
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|x64.ActiveCfg = Debug|x64
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|x64.Build.0 = Debug|x64
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|x86.ActiveCfg = Debug|x86
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Debug|x86.Build.0 = Debug|x86
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|x64.ActiveCfg = Release|x64
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|x64.Build.0 = Release|x64
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|x86.ActiveCfg = Release|x86
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C5541FAC-3052-49DC-8239-711807034072} = {1290C1D5-2F2B-4147-852C-F12E18E81A7E}
+		{3CF1CB81-0F11-4634-96E6-8784AA4B7D39} = {D4A6AE7D-D0E3-41AA-AC37-3BC0B773B734}
 	EndGlobalSection
 EndGlobal

@@ -1,66 +1,75 @@
 namespace Persimmon
 
-type ScriptTestBuilder internal (name: string) =
-  let test = test name
-  member __.Return(x) = test.Return(x)
-  member __.ReturnFrom(x) = test.ReturnFrom(x)
-  member __.Source(x: AssertionResult<unit>) = UnitAssertionResult x
-  member __.Source(x: AssertionResult<_>) = NonUnitAssertionResult x
-  member __.Source(x: TestCase<unit>) = UnitTestCase x
-  member __.Source(x: TestCase<_>) = NonUnitTestCase x
-  member __.Bind(x, f: 'T -> TestCase<'U>) = test.Bind(x, f)
-  member __.Delay(f) = test.Delay(f)
-  member __.Run(f) = test.Run(f).Box()
-
-type ScriptParameterizeBuilder() =
-  member __.Delay(f) = parameterize.Delay(f)
-  member __.Run(f) =
-    try
-      f ()
-    with e ->
-      let e = exn("Failed to initialize `source` or `case` in `parameterize` computation expression.", e)
-      [ TestCase.makeError None [] e ]
-  member __.Yield(()) = parameterize.Yield(())
-  member __.Yield(xs: _ seq) = parameterize.Yield(xs)
-  [<CustomOperation("case")>]
-  member inline __.Case(source, case) = parameterize.Case(source, case)
-  [<CustomOperation("source")>]
-  member __.Source(source1, source2) = parameterize.Source(source1, source2)
-  [<CustomOperation("run")>]
-  member __.RunTests(source, f: _ -> TestCase<_>) =
-    parameterize.RunTests(source, f)
-    |> Seq.map (fun x -> x.Box())
-    |> Seq.toList
-
-module ScriptSyntax =
-
-  let test name = ScriptTestBuilder(name)
-  let parameterize = ScriptParameterizeBuilder()
+open System
+open System.Reflection
+open System.Diagnostics
+open Persimmon
+open Persimmon.Internals
+open Persimmon.ActivePatterns
+open Persimmon.Runner
+open Persimmon.Output
 
 type ScriptContext internal () =
-  let onFinished = ref (List.iter (printfn "%A"))
-with
+  let watch = Stopwatch()
+  let reporter =
+    let console = {
+      Writer = Console.Out
+      Formatter = Formatter.SummaryFormatter.normal watch
+    }
+    new Reporter(
+      new Printer<_>(Console.Out, Formatter.ProgressFormatter.dot),
+      new Printer<_>([console]),
+      new Printer<_>(Console.Error, Formatter.ErrorFormatter.normal)
+    )
+
+  let report result =
+    reporter.ReportProgress(TestResult.endMarker)
+    reporter.ReportSummary(result.Results)
+
+  let onFinished = ref report
+
   member this.OnFinished with get() = !onFinished and set(value) = onFinished := value
-  member this.test(name) = ScriptSyntax.test name
-  member this.parameterize = ScriptSyntax.parameterize
-  member this.Run(f: ScriptContext -> TestCase<obj> list) =
-    let res = f this |> List.map (fun t -> t.Run())
-    this.OnFinished(res)
+  member this.Run(f: ScriptContext -> #seq<#TestMetadata>) =
+    let tests = f this
+    watch.Start()
+    let results =
+      tests
+      |> TestRunner.runAllTests reporter.ReportProgress
+    watch.Stop()
+    results |> this.OnFinished
 
-module Runner =
+  interface IDisposable with
+    member __.Dispose() = (reporter :> IDisposable).Dispose()
 
-  let countPassedOrSkipped xs =
-    xs
-    |> List.filter (function
-      | Done(_, xs, _) ->
-        xs |> NonEmptyList.forall (function
-          | Passed _
-          | NotPassed (_, Skipped _) -> true
-          | NotPassed (_, Violated _) -> false)
-      | _ -> false)
-    |> List.length
+module Script =
 
-  let countNotPassedOrError xs = List.length xs - countPassedOrSkipped xs
+  let countPassedOrSkipped results =
+    let rec inner count = function
+    | EndMarker -> count
+    | ContextResult contextResult ->
+      contextResult.Results |> Seq.fold inner count
+    | TestResult testResult ->
+      if Array.isEmpty testResult.Exceptions then
+        match (testResult.AssertionResults |> AssertionResult.Seq.typicalResult).Status with
+        | None
+        | Some (Skipped _) -> count + 1
+        | Some (Violated _) -> count
+      else count
+    results.Results
+    |> Array.fold inner 0 
 
-  let run f = ScriptContext().Run(f)
+  let countNotPassedOrError results = results.Errors
 
+  let run f =
+    use ctx = new ScriptContext()
+    ctx.Run(f)
+
+#if NETSTANDARD
+#else
+  let collectAndRun () =
+    use ctx = new ScriptContext()
+    ctx.Run(fun _ ->
+      [ Assembly.GetExecutingAssembly() ]
+      |> TestCollector.collectRootTestObjects
+    )
+#endif
