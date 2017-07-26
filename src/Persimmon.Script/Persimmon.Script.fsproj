@@ -1,6 +1,16 @@
 <Project Sdk="FSharp.NET.Sdk;Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Version>2.0.0</Version>
     <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <Authors>pocketberserker</Authors>
+    <Owners>pocketberserker</Owners>
+    <PackageProjectUrl>https://github.com/persimmon-projects/Persimmon.Script</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/persimmon-projects/Persimmon.Script/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/persimmon-projects/Persimmon.Materials/master/StandardIcons/persimmon_128.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Script helper for Persimmon</Description>
+    <PackageTags>F#;fsharp;test;testing</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Runner.fs" />
