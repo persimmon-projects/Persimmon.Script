@@ -4,7 +4,6 @@
 
 open System.Reflection
 open Persimmon
-open Persimmon.Runner
 open UseTestNameByReflection
 
 let ``a unit test`` = test {
