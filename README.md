@@ -1,4 +1,5 @@
 # Persimmon.Script
+Persimmon [![NuGet Status](http://img.shields.io/nuget/v/Persimmon.Script.svg?style=flat)](https://www.nuget.org/packages/Persimmon.Script/)
 
 Persimmon.Script is a script helper for Persimmon.
 
