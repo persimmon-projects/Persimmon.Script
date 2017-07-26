@@ -29,6 +29,7 @@ type ScriptContext internal () =
   let onFinished = ref report
 
   member this.OnFinished with get() = !onFinished and set(value) = onFinished := value
+  
   member this.Run(f: ScriptContext -> #seq<#TestMetadata>) =
     let tests = f this
     watch.Start()
@@ -37,6 +38,9 @@ type ScriptContext internal () =
       |> TestRunner.runAllTests reporter.ReportProgress
     watch.Stop()
     results |> this.OnFinished
+
+  member this.CollectAndlRun(f: ScriptContext -> Assembly) =
+    this.Run(f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)
 
   interface IDisposable with
     member __.Dispose() = (reporter :> IDisposable).Dispose()
@@ -64,12 +68,6 @@ module Script =
     use ctx = new ScriptContext()
     ctx.Run(f)
 
-#if NETSTANDARD
-#else
-  let collectAndRun () =
+  let collectAndRun f =
     use ctx = new ScriptContext()
-    ctx.Run(fun _ ->
-      [ Assembly.GetExecutingAssembly() ]
-      |> TestCollector.collectRootTestObjects
-    )
-#endif
+    ctx.CollectAndlRun(f)

@@ -1,0 +1,6 @@
+source https://api.nuget.org/v3/index.json
+
+group Examples
+  source https://api.nuget.org/v3/index.json
+
+  nuget Persimmon.Runner
