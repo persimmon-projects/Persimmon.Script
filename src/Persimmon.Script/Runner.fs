@@ -9,18 +9,7 @@ open Persimmon.ActivePatterns
 open Persimmon.Runner
 open Persimmon.Output
 
-type ScriptContext internal () =
-  let watch = Stopwatch()
-  let reporter =
-    let console = {
-      Writer = Console.Out
-      Formatter = Formatter.SummaryFormatter.normal watch
-    }
-    new Reporter(
-      new Printer<_>(Console.Out, Formatter.ProgressFormatter.dot),
-      new Printer<_>([console]),
-      new Printer<_>(Console.Error, Formatter.ErrorFormatter.normal)
-    )
+type ScriptContext (watch: Stopwatch, reporter: Reporter) =
 
   let report result =
     reporter.ReportProgress(TestResult.endMarker)
@@ -28,8 +17,25 @@ type ScriptContext internal () =
 
   let onFinished = ref report
 
+  internal new() =
+    let watch = Stopwatch()
+    new ScriptContext(watch)
+
+  new(watch) =
+    let console = {
+      Writer = Console.Out
+      Formatter = Formatter.SummaryFormatter.normal watch
+    }
+    let reporter =
+      new Reporter(
+        new Printer<_>(Console.Out, Formatter.ProgressFormatter.dot),
+        new Printer<_>([console]),
+        new Printer<_>(Console.Error, Formatter.ErrorFormatter.normal)
+      )
+    new ScriptContext(watch, reporter)
+
   member this.OnFinished with get() = !onFinished and set(value) = onFinished := value
-  
+
   member this.Run(f: ScriptContext -> #seq<#TestMetadata>) =
     let tests = f this
     watch.Start()
@@ -60,7 +66,7 @@ module Script =
         | Some (Violated _) -> count
       else count
     results.Results
-    |> Array.fold inner 0 
+    |> Array.fold inner 0
 
   let countNotPassedOrError results = results.Errors
 
