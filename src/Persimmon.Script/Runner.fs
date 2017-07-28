@@ -45,7 +45,7 @@ type ScriptContext (watch: Stopwatch, reporter: Reporter) =
     watch.Stop()
     results |> this.OnFinished
 
-  member this.CollectAndlRun(f: ScriptContext -> Assembly) =
+  member this.CollectAndRun(f: ScriptContext -> Assembly) =
     this.Run(f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)
 
   interface IDisposable with
@@ -76,4 +76,4 @@ module Script =
 
   let collectAndRun f =
     use ctx = new ScriptContext()
-    ctx.CollectAndlRun(f)
+    ctx.CollectAndRun(f)
