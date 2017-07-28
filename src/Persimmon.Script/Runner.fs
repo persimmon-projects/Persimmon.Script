@@ -1,6 +1,7 @@
 namespace Persimmon
 
 open System
+open System.IO
 open System.Reflection
 open System.Diagnostics
 open Persimmon
@@ -77,3 +78,16 @@ module Script =
   let collectAndRun f =
     use ctx = new ScriptContext()
     ctx.CollectAndRun(f)
+
+  let testReport (f: ScriptContext -> Assembly) : string =
+    let stopwatch = Stopwatch()
+    use writer = new StringWriter()
+    use reporter =
+      new Reporter(
+        new Printer<_>(TextWriter.Null, Formatter.ProgressFormatter.dot),
+        new Printer<_>(writer, Formatter.SummaryFormatter.normal stopwatch),
+        new Printer<_>(writer, Formatter.ErrorFormatter.normal)
+      )
+    use ctx = new ScriptContext(stopwatch, reporter)
+    ctx.CollectAndlRun(f)
+    writer.ToString()
