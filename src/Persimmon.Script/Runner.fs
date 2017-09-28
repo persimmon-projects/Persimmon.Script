@@ -18,7 +18,7 @@ type ScriptContext (watch: Stopwatch, reporter: Reporter) =
 
   let onFinished = ref report
 
-  internal new() =
+  new() =
     let watch = Stopwatch()
     new ScriptContext(watch)
 
@@ -71,12 +71,10 @@ module Script =
 
   let countNotPassedOrError results = results.Errors
 
-  let run f =
-    use ctx = new ScriptContext()
+  let inline run f (ctx: ScriptContext) =
     ctx.Run(f)
 
-  let collectAndRun f =
-    use ctx = new ScriptContext()
+  let inline collectAndRun f (ctx: ScriptContext) =
     ctx.CollectAndRun(f)
 
 module FSI =
@@ -103,7 +101,6 @@ module FSI =
       >> Seq.singleton
     )
 
-  let collectAndRun f watch reporter =
-    use ctx = new ScriptContext(watch, reporter)
+  let collectAndRun f (ctx: ScriptContext) =
     ctx
     |> run (f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)

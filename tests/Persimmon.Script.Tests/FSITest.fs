@@ -1,6 +1,5 @@
 module Persimmon.Tests.FSITest
 
-open System.Diagnostics
 open Persimmon
 open UseTestNameByReflection
 
@@ -20,7 +19,7 @@ let ``run only latest namespace`` =
     )
   test {
     let count = ref 0
-    use ctx = new ScriptContext(Stopwatch())
+    use ctx = new ScriptContext()
     ctx
     |> FSI.run (fun ctx ->
       ctx.OnFinished <- fun x -> count := Script.countPassedOrSkipped x

@@ -19,7 +19,9 @@ open Persimmon
 // write tests ...
 
 // collect test from Assembly and run tests
-Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
+use context = new ScriptContext()
+context
+|> Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
 ```
 
 If you want to use your reporter:
