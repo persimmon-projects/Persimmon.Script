@@ -3,6 +3,7 @@ namespace Persimmon
 open System
 open System.Reflection
 open System.Diagnostics
+open System.Text.RegularExpressions
 open Persimmon
 open Persimmon.Internals
 open Persimmon.ActivePatterns
@@ -77,3 +78,32 @@ module Script =
   let collectAndRun f =
     use ctx = new ScriptContext()
     ctx.CollectAndRun(f)
+
+module FSI =
+
+  let run (f: ScriptContext -> #seq<#TestMetadata>) (ctx: ScriptContext) =
+
+    ctx.Run(
+      f
+      >> Seq.choose (function
+      | Context context ->
+        context.Name
+        |> Option.bind (fun name ->
+          let m = Regex.Match(name, "FSI_([0-9]+)")
+          if m.Success then
+            match Int32.TryParse(m.Groups.[1].Value) with
+            | true, n -> Some(n, context :> TestMetadata)
+            | false, _ -> None
+          else None
+        )
+      | _ -> None
+      )
+      >> Seq.maxBy fst
+      >> snd
+      >> Seq.singleton
+    )
+
+  let collectAndRun f watch reporter =
+    use ctx = new ScriptContext(watch, reporter)
+    ctx
+    |> run (f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)
