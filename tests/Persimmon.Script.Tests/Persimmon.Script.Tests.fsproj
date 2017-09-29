@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FSITest.fs" />
     <Compile Include="RunnerTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 # Persimmon.Script
 [![NuGet Status](http://img.shields.io/nuget/v/Persimmon.Script.svg?style=flat)](https://www.nuget.org/packages/Persimmon.Script/)
+[![Build status](https://ci.appveyor.com/api/projects/status/htqrush74ejmowh0/branch/master?svg=true)](https://ci.appveyor.com/project/pocketberserker/persimmon-script/branch/master)
+[![Build Status](https://travis-ci.org/persimmon-projects/Persimmon.Script.svg?branch=master)](https://travis-ci.org/persimmon-projects/Persimmon.Script)
 
 Persimmon.Script is a script helper for Persimmon.
 
@@ -17,7 +19,9 @@ open Persimmon
 // write tests ...
 
 // collect test from Assembly and run tests
-Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
+use context = new ScriptContext()
+context
+|> Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
 ```
 
 If you want to use your reporter:

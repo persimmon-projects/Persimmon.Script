@@ -5,7 +5,9 @@ open UseTestNameByReflection
 
 let ``script tests should pass`` = test {
   let failCount = ref 0
-  Script.run begin fun ctx ->
+  use ctx = new ScriptContext()
+  ctx
+  |> Script.run (fun ctx ->
     ctx.OnFinished <- fun x -> failCount := Script.countNotPassedOrError x
     let unit = test {
       do! assertEquals 1 1
@@ -17,7 +19,7 @@ let ``script tests should pass`` = test {
       unit :> TestMetadata
       ``return value`` :> TestMetadata
     ]
-  end
+  )
   do! assertEquals 0 !failCount
 }
 
@@ -27,14 +29,16 @@ let ``parameterized script tests should pass`` =
   }
   test {
     let failCount = ref 0
-    Script.run begin fun ctx ->
+    use ctx = new ScriptContext()
+    ctx
+    |> Script.run (fun ctx ->
       ctx.OnFinished <- fun x -> failCount := Script.countNotPassedOrError x
       parameterize {
         case 2
         case 4
         run parameterizeTest
       }
-    end
+    )
     do! assertEquals 0 !failCount
   }
 
@@ -49,7 +53,9 @@ let ``count tests`` =
   }
   test {
     let passedOrSkippedCount = ref 0
-    Script.run begin fun ctx ->
+    use ctx = new ScriptContext()
+    ctx
+    |> Script.run (fun ctx ->
       ctx.OnFinished <- fun x ->
         passedOrSkippedCount := Script.countPassedOrSkipped x
       [
@@ -58,6 +64,6 @@ let ``count tests`` =
         notPassed
         error
       ]
-    end
+    )
     do! assertEquals 2 !passedOrSkippedCount
   }
