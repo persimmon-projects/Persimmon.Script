@@ -10,6 +10,7 @@ let ``run only latest namespace`` =
     |> List.map (fun n ->
       Context(
         sprintf "FSI_%04d" n,
+        [],
         parameterize {
           source [n]
           run (fun n -> test { return n })

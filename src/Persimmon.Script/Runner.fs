@@ -6,7 +6,7 @@ open System.Diagnostics
 open System.Text.RegularExpressions
 open Persimmon
 open Persimmon.Internals
-open Persimmon.ActivePatterns
+open ActivePatterns
 open Persimmon.Runner
 open Persimmon.Output
 
@@ -35,19 +35,19 @@ type ScriptContext (watch: Stopwatch, reporter: Reporter) =
       )
     new ScriptContext(watch, reporter)
 
-  member this.OnFinished with get() = !onFinished and set(value) = onFinished := value
+  member __.OnFinished with get() = !onFinished and set(value) = onFinished := value
 
   member this.Run(f: ScriptContext -> #seq<#TestMetadata>) =
     let tests = f this
     watch.Start()
     let results =
       tests
-      |> TestRunner.runAllTests reporter.ReportProgress
+      |> TestRunner.runAllTests reporter.ReportProgress TestFilter.allPass
     watch.Stop()
     results |> this.OnFinished
 
   member this.CollectAndRun(f: ScriptContext -> Assembly) =
-    this.Run(f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)
+    this.Run(f >> Seq.singleton >> TestCollector.collectRootTestObjects)
 
   interface IDisposable with
     member __.Dispose() = (reporter :> IDisposable).Dispose()

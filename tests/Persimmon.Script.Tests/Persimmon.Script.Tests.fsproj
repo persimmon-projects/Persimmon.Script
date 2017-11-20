@@ -1,6 +1,6 @@
-<Project Sdk="FSharp.NET.Sdk;Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FSITest.fs" />
@@ -8,11 +8,9 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="4.1.*" />
-    <PackageReference Include="FSharp.NET.Sdk" Version="1.0.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="Persimmon.Runner" Version="2.0.1" />
-    <PackageReference Include="Persimmon.TestAdapter" Version="0.9.8" />
+    <PackageReference Include="Persimmon.Runner" Version="3.1.0" />
+    <PackageReference Include="Persimmon.TestAdapter" Version="0.10.0" />
     <ProjectReference Include="../../src/Persimmon.Script/Persimmon.Script.fsproj" />
   </ItemGroup>
 </Project>
