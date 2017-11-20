@@ -1,3 +1,8 @@
+### 3.0.0 - November 20 2017
+* redesign API
+* add FSI module
+* update Persimmon(3.1.0)
+
 ### 2.1.1 - July 29 2017
 * fix typo
 
