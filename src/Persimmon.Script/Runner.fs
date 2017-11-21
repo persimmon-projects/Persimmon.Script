@@ -86,13 +86,7 @@ module FSI =
       >> Seq.choose (function
       | Context context ->
         context.Name
-        |> Option.bind (fun name ->
-          let m = Regex.Match(name, "FSI_([0-9]+)")
-          if m.Success then
-            match Int32.TryParse(m.Groups.[1].Value) with
-            | true, n -> Some(n, context :> TestMetadata)
-            | false, _ -> None
-          else None
+        |> Option.bind (fun name -> Some(0, context :> TestMetadata)
         )
       | _ -> None
       )
