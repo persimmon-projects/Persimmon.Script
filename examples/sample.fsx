@@ -24,4 +24,6 @@ let ``parameterize test`` = parameterize {
   run parameterizeTest
 }
 
-Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
+let context = new ScriptContext()
+context
+|> Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
