@@ -79,23 +79,24 @@ module Script =
 
 module FSI =
 
+  let private tryFind = function
+  | Context context ->
+    match context.Name with
+    | Some name ->
+      let m = Regex.Match(name, "FSI_([0-9]+)")
+      if m.Success then
+        match Int32.TryParse(m.Groups.[1].Value) with
+        | true, n -> Some(n, context :> TestMetadata)
+        | false, _ -> None
+      else None
+    | None -> None
+  | _ -> None
+
   let run (f: ScriptContext -> #seq<#TestMetadata>) (ctx: ScriptContext) =
 
     ctx.Run(
       f
-      >> Seq.choose (function
-      | Context context ->
-        context.Name
-        |> Option.bind (fun name ->
-          let m = Regex.Match(name, "FSI_([0-9]+)")
-          if m.Success then
-            match Int32.TryParse(m.Groups.[1].Value) with
-            | true, n -> Some(n, context :> TestMetadata)
-            | false, _ -> None
-          else None
-        )
-      | _ -> None
-      )
+      >> Seq.choose tryFind
       >> Seq.maxBy fst
       >> snd
       >> Seq.singleton
@@ -103,4 +104,4 @@ module FSI =
 
   let collectAndRun f (ctx: ScriptContext) =
     ctx
-    |> run (f >> Seq.singleton >> Runner.TestCollector.collectRootTestObjects)
+    |> run (f >> Seq.singleton >> TestCollector.collectRootTestObjects)
