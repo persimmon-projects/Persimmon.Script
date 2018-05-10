@@ -12,16 +12,23 @@ Persimmon.Script is a script helper for Persimmon.
 #r @"./packages/Persimmon.Runner/lib/net40/Persimmon.Runner.dll"
 #r @"./packages/Persimmon.Script/net45/Persimmon.Script.dll"
 
-open System.IO
+open UseTestNameByReflection
 open System.Reflection
 open Persimmon
 
 // write tests ...
+let ``a unit test`` = test {
+  do! assertEquals 1 2
+}
 
 // collect test from Assembly and run tests
-use context = new ScriptContext()
-context
-|> Script.collectAndRun (fun _ -> Assembly.GetExecutingAssembly())
+// ===== case ( FSharp Interactive ) =====
+new ScriptContext()
+|> FSI.collectAndRun( fun _ -> Assembly.GetExecutingAssembly() )
+
+// ===== case ( Othres ) =====
+new ScriptContext()
+|> Script.collectAndRun( fun _ -> Assembly.GetExecutingAssembly() )
 ```
 
 If you want to use your reporter:
