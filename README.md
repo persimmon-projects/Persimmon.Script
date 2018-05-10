@@ -22,8 +22,13 @@ let ``a unit test`` = test {
 }
 
 // collect test from Assembly and run tests
+// ===== case ( FSharp Interactive ) =====
 new ScriptContext()
 |> FSI.collectAndRun( fun _ -> Assembly.GetExecutingAssembly() )
+
+// ===== case ( Othres ) =====
+new ScriptContext()
+|> Script.collectAndRun( fun _ -> Assembly.GetExecutingAssembly() )
 ```
 
 If you want to use your reporter:
