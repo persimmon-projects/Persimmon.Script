@@ -9,7 +9,7 @@ Persimmon.Script is a script helper for Persimmon.
 
 ```fsharp
 #r @"./packages/Persimmon/lib/net45/Persimmon.dll"
-#r @"./packages/Persimmon.Runner/lib/net40/Persimmon.Runner.dll"
+#r @"./packages/Persimmon.Runner/lib/net45/Persimmon.Runner.dll"
 #r @"./packages/Persimmon.Script/net45/Persimmon.Script.dll"
 
 open UseTestNameByReflection

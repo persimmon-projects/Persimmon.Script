@@ -1,5 +1,5 @@
 #r @"../packages/examples/Persimmon/lib/net45/Persimmon.dll"
-#r @"../packages/examples/Persimmon.Runner/lib/net40/Persimmon.Runner.dll"
+#r @"../packages/examples/Persimmon.Runner/lib/net45/Persimmon.Runner.dll"
 #r @"../src/Persimmon.Script/bin/Release/net45/Persimmon.Script.dll"
 
 open System.Reflection

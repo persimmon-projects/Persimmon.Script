@@ -16,13 +16,14 @@
     <Compile Include="Runner.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Persimmon.Runner" Version="3.1.1" />
+    <PackageReference Include="Persimmon" Version="4.0.2" />
+    <PackageReference Include="Persimmon.Runner" Version="4.0.2" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <PackageReference Include="FSharp.Core" Version="4.0.0.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
-    <PackageReference Include="FSharp.Core" Version="4.1.17" />
+    <PackageReference Include="FSharp.Core" Version="4.3.4" />
   </ItemGroup>
 </Project>
