@@ -1,3 +1,6 @@
+### 4.0.0 - July 4 2018
+* update Persimmon(4.0.2)
+
 ### 3.0.1 - November 22 2017
 * update Persimmon(3.1.1)
 
